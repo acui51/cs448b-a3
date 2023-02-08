@@ -1,3 +1,43 @@
+/*** Map CSS ***/
+.map-canvas {
+  height: 480px;
+  width: 960px;
+  border: none;
+  border-style: ridge;
+  border-color: #fff;
+  color: #fff;
+  background-color: "#D37506";
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19);
+}
+
+.path {
+  fill: rgb(132, 0, 255);
+  stroke: cornsilk;
+  stroke-width: 1px;
+}
+
+.viewport {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-direction: column;
+}
+
+.tooltip-data {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter {
+  margin-bottom: 12px;
+}
+
+/*** Map CSS ***/
+
 .App {
   text-align: center;
 }
