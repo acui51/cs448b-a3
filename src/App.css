@@ -22,10 +22,34 @@
 
 .lefthand {
   padding: 48px;
+  overflow-y: scroll;
 }
 
 #draggable-circle-a #draggable-circle-b {
   z-index: -1;
+}
+
+.restaurant--wrapper {
+  display: flex;
+  gap: 16px;
+  max-width: 400px;
+}
+
+.restaurant--name {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+}
+
+.restaurant--img {
+  width: 75px;
+  aspect-ratio: 1;
+}
+
+.restaurant--content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .viewport {

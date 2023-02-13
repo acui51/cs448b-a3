@@ -12,6 +12,7 @@ import {
 import { addDragHandlers } from "./utils/dragHelpers";
 import { lesserrafim } from "./utils/lesserrafim";
 import { Input, Space } from "antd";
+import { Restaurant } from "./components/Restaurant";
 
 const tooltipStyles = {
   position: "absolute",
@@ -79,8 +80,9 @@ function App() {
   });
 
   // Draw circles
+  const inBoundRestaurants = [];
   const circles = restaurantsData.map(
-    ({ name, rating, coordinates, address }, index) => {
+    ({ name, rating, coordinates, address, image_url, url }, index) => {
       const [long, lat] = coordinates.split(",");
       const [cx, cy] = projection([+lat, +long]);
 
@@ -99,6 +101,16 @@ function App() {
         centerY: bCircleCenter.y,
         radius: bCircleCenter.r,
       });
+
+      if (isInBoundingACircle && isInBoundingBCircle) {
+        inBoundRestaurants.push({
+          name,
+          rating,
+          address,
+          image_url,
+          url,
+        });
+      }
 
       return (
         <RestaurantCircle
@@ -175,6 +187,12 @@ function App() {
             />
           </Space>
         </div>
+        <h3>Restaurants</h3>
+        <Space direction="vertical" size="middle">
+          {inBoundRestaurants.map((restaurant) => {
+            return <Restaurant {...restaurant} />;
+          })}
+        </Space>
       </div>
       <svg className="map-canvas">
         <g>{bayAreaRegions}</g>
