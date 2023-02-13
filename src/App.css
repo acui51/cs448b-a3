@@ -3,10 +3,10 @@
   height: 800px;
   width: 900px;
   border: none;
-  border-style: ridge;
   border-color: #fff;
   color: #fff;
   background-color: "#D37506";
+  align-self: center;
 }
 
 .path {

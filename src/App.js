@@ -121,6 +121,7 @@ function App() {
       }}
     >
       <div className="lefthand">
+        <h1>CS448B Assignment 3</h1>
         <div className="filter">
           <h3>Ratings</h3>
           <Input.Group>
