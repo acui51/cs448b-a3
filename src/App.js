@@ -15,7 +15,7 @@ import { Input, Space } from "antd";
 
 const tooltipStyles = {
   position: "absolute",
-  opacity: 0,
+  visiblity: "hidden",
   border: `1px solid black`,
   backgroundColor: "white",
   padding: "8px",

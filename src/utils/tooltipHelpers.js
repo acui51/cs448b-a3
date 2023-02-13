@@ -1,11 +1,11 @@
 import * as d3 from "d3";
 
 export const handleMouseOver = (tooltipHtml) => {
-  d3.select("#tooltip").style("opacity", 1).html(tooltipHtml);
+  d3.select("#tooltip").style("visibility", "visible").html(tooltipHtml);
 };
 
 export const handleMouseOut = () => {
-  d3.select("#tooltip").style("opacity", 0);
+  d3.select("#tooltip").style("visibility", "hidden");
 };
 
 export const handleMouseMove = (event) => {
