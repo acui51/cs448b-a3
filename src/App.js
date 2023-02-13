@@ -136,12 +136,6 @@ function App() {
       <div className="lefthand">
         <h1>CS448B Assignment 3</h1>
         <div className="filter">
-          <h3>Search</h3>
-          <Input.Search
-            value={searchValue}
-            placeholder="Search..."
-            onChange={(event) => setSearchValue(event.target.value)}
-          />
           <h3>Ratings</h3>
           <Input.Group>
             <Input
@@ -196,6 +190,12 @@ function App() {
         </div>
         <h3>Restaurants</h3>
         <Space direction="vertical" size="middle">
+          <Input.Search
+            value={searchValue}
+            placeholder="Search..."
+            onChange={(event) => setSearchValue(event.target.value)}
+            style={{ width: "400px" }}
+          />
           {inBoundRestaurants
             .filter(({ name }) =>
               name.toLowerCase().startsWith(searchValue.toLowerCase())
