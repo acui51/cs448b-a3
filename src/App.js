@@ -9,6 +9,9 @@ import {
   handleMouseOver,
   handleMouseMove,
 } from "./utils/tooltipHelpers";
+import { addDragHandlers } from "./utils/dragHelpers";
+import { lesserrafim } from "./utils/lesserrafim";
+import { Input, Space } from "antd";
 
 const tooltipStyles = {
   position: "absolute",
@@ -22,21 +25,22 @@ const BayAreaRegion = ({ path }) => {
   return <path className="path" d={path} />;
 };
 
-const RestaurantCircle = ({ lat, long, projection, tooltipData }) => {
+const RestaurantCircle = ({ cy, cx, tooltipData, isInBoundingCircle }) => {
   const tooltipHtml = `
     <div class="tooltip-data">
       <span>${tooltipData.name}</span>
       <span>Address: ${tooltipData.address}</span>
       <span>Rating: ${tooltipData.rating}</span>
+      <span>Coordinates: ${tooltipData.coordinates}</span>
     </div>
   `;
 
   return (
     <circle
-      cx={projection([+lat, +long])[0]}
-      cy={projection([+lat, +long])[1]}
+      cx={cx}
+      cy={cy}
       r="1"
-      fill="#69b3a2"
+      fill={isInBoundingCircle ? "#EE6B6E" : "#69b3a2"}
       onMouseOver={() => handleMouseOver(tooltipHtml)}
       onMouseOut={() => handleMouseOut()}
       onMouseMove={(event) => handleMouseMove(event)}
@@ -47,6 +51,16 @@ const RestaurantCircle = ({ lat, long, projection, tooltipData }) => {
 function App() {
   const [lowerRating, setLowerRating] = useState("0");
   const [upperRating, setUpperRating] = useState("5");
+  const [aCircleCenter, setACircleCenter] = useState({
+    x: 491,
+    y: 407,
+    r: 100,
+  });
+  const [bCircleCenter, setBCircleCenter] = useState({
+    x: 625,
+    y: 400,
+    r: 100,
+  });
   const { restaurantsData, loading: restaurantsLoading } = useRestaurants(
     lowerRating,
     upperRating
@@ -68,37 +82,117 @@ function App() {
   const circles = restaurantsData.map(
     ({ name, rating, coordinates, address }, index) => {
       const [long, lat] = coordinates.split(",");
+      const [cx, cy] = projection([+lat, +long]);
+
+      const isInBoundingACircle = lesserrafim({
+        x: cx,
+        y: cy,
+        centerX: aCircleCenter.x,
+        centerY: aCircleCenter.y,
+        radius: aCircleCenter.r,
+      });
+
+      const isInBoundingBCircle = lesserrafim({
+        x: cx,
+        y: cy,
+        centerX: bCircleCenter.x,
+        centerY: bCircleCenter.y,
+        radius: bCircleCenter.r,
+      });
+
       return (
         <RestaurantCircle
+          isInBoundingCircle={isInBoundingACircle && isInBoundingBCircle}
           key={index}
-          lat={lat}
-          long={long}
+          cx={cx}
+          cy={cy}
           projection={projection}
-          tooltipData={{ name, rating, address }}
+          tooltipData={{ name, rating, address, coordinates }}
         />
       );
     }
   );
 
   return (
-    <div className="viewport">
-      <div className="filter">
-        Filter by rating
-        <input
-          value={lowerRating}
-          min={0}
-          max={upperRating}
-          onChange={(event) => setLowerRating(event.target.value)}
-        />
-        <input
-          value={upperRating}
-          min={lowerRating}
-          max={5}
-          onChange={(event) => setUpperRating(event.target.value)}
-        />
+    <div
+      className="viewport"
+      ref={(_node) => {
+        addDragHandlers(setACircleCenter, setBCircleCenter);
+      }}
+    >
+      <div className="lefthand">
+        <div className="filter">
+          <h3>Ratings</h3>
+          <Input.Group>
+            <Input
+              style={{
+                width: "33%",
+                textAlign: "center",
+                borderTopRightRadius: "0px",
+              }}
+              value={lowerRating}
+              onChange={(event) => setLowerRating(event.target.value)}
+            />
+            <Input
+              className="site-input-split"
+              style={{
+                width: 30,
+                borderLeft: 0,
+                borderRight: 0,
+                pointerEvents: "none",
+              }}
+              placeholder="~"
+              disabled
+            />
+            <Input
+              className="site-input-right"
+              style={{
+                width: "33%",
+                textAlign: "center",
+              }}
+              value={upperRating}
+              onChange={(event) => setUpperRating(event.target.value)}
+            />
+          </Input.Group>
+        </div>
+        <div className="filter">
+          <h3>Zone Ranges</h3>
+          <Space>
+            <Input
+              addonBefore="Zone A"
+              value={aCircleCenter.r}
+              onChange={(event) =>
+                setACircleCenter({ ...aCircleCenter, r: event.target.value })
+              }
+            />
+            <Input
+              addonBefore="Zone B"
+              value={bCircleCenter.r}
+              onChange={(event) =>
+                setBCircleCenter({ ...bCircleCenter, r: event.target.value })
+              }
+            />
+          </Space>
+        </div>
       </div>
       <svg className="map-canvas">
         <g>{bayAreaRegions}</g>
+        <g>
+          <circle
+            id="draggable-circle-a"
+            r={aCircleCenter.r}
+            cx={aCircleCenter.x}
+            cy={aCircleCenter.y}
+            fill="rgba(255, 0, 0, 0.19)"
+          />
+          <circle
+            id="draggable-circle-b"
+            r={bCircleCenter.r}
+            cx={bCircleCenter.x}
+            cy={bCircleCenter.y}
+            fill="rgba(255, 0, 0, 0.19)"
+          />
+        </g>
         <g>{circles}</g>
       </svg>
       <div id="tooltip" style={tooltipStyles} />

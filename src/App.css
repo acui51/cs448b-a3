@@ -1,29 +1,39 @@
 /*** Map CSS ***/
 .map-canvas {
-  height: 480px;
-  width: 960px;
+  height: 800px;
+  width: 900px;
   border: none;
   border-style: ridge;
   border-color: #fff;
   color: #fff;
   background-color: "#D37506";
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19);
 }
 
 .path {
-  fill: rgb(132, 0, 255);
-  stroke: cornsilk;
-  stroke-width: 1px;
+  fill: rgb(238, 238, 238);
+  stroke: white;
+  stroke-width: 2px;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+}
+
+.lefthand {
+  padding: 48px;
+}
+
+#draggable-circle-a #draggable-circle-b {
+  z-index: -1;
 }
 
 .viewport {
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
   position: relative;
-  flex-direction: column;
 }
 
 .tooltip-data {

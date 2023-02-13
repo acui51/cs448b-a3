@@ -9,7 +9,7 @@ export const getMapProjection = (mapData) => {
     .fitExtent(
       [
         [0, 0],
-        [960, 480],
+        [900, 800],
       ],
       mapData
     );
