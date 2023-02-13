@@ -52,6 +52,7 @@ const RestaurantCircle = ({ cy, cx, tooltipData, isInBoundingCircle }) => {
 function App() {
   const [lowerRating, setLowerRating] = useState("0");
   const [upperRating, setUpperRating] = useState("5");
+  const [searchValue, setSearchValue] = useState("");
   const [aCircleCenter, setACircleCenter] = useState({
     x: 491,
     y: 407,
@@ -135,6 +136,12 @@ function App() {
       <div className="lefthand">
         <h1>CS448B Assignment 3</h1>
         <div className="filter">
+          <h3>Search</h3>
+          <Input.Search
+            value={searchValue}
+            placeholder="Search..."
+            onChange={(event) => setSearchValue(event.target.value)}
+          />
           <h3>Ratings</h3>
           <Input.Group>
             <Input
@@ -189,9 +196,14 @@ function App() {
         </div>
         <h3>Restaurants</h3>
         <Space direction="vertical" size="middle">
-          {inBoundRestaurants.map((restaurant) => {
-            return <Restaurant {...restaurant} />;
-          })}
+          {inBoundRestaurants
+            .filter(({ name }) =>
+              name.toLowerCase().startsWith(searchValue.toLowerCase())
+            )
+            .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+            .map((restaurant) => {
+              return <Restaurant {...restaurant} />;
+            })}
         </Space>
       </div>
       <svg className="map-canvas">
